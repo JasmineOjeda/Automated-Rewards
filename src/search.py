@@ -3,22 +3,24 @@ from selenium.webdriver.common.by import By
 import time
 import string
 import random
+from functions import send_random_search, clear_search
 
 def search(driver, iterations):
     driver.get("https://bing.com/")
-    time.sleep(3)
+    time.sleep(5)
     count = iterations
 
     while (count > 0) :
-        random_search = ''.join(random.choices(string.ascii_letters + " ", k=random.randint(3, 15)))
-        print(str(count) + ": " + random_search)
-        driver.find_element(By.CSS_SELECTOR, "[type='search']").send_keys(random_search)
-        time.sleep(0.5)
-        driver.find_element(By.CSS_SELECTOR, "[type='search']").send_keys("\n")
-        time.sleep(1)
-        driver.find_element(By.CSS_SELECTOR, "[type='search']").clear()
-        time.sleep(0.5)
-        count -= 1
+        try:
+            random_search = ''.join(random.choices(string.ascii_letters + " ", k=random.randint(3, 15)))
+            print(str(count) + ": " + random_search)
+            send_random_search(driver, 20, random_search, "//textarea[@type='search']")
+            time.sleep(0.5)
+            clear_search(driver, 20, "//textarea[@type='search']")
+            time.sleep(0.5)
+            count -= 1
+        except:
+            time.sleep(5)
 
 def desktop_search():
     options = webdriver.EdgeOptions()
@@ -28,7 +30,7 @@ def desktop_search():
 
 def mobile_search():
     options = webdriver.EdgeOptions()
-    options.use_chromium = True  
+    #options.use_chromium = True  
     
     mobile_emulation = {  
         "deviceMetrics": { "width": 375, "height": 812, "pixelRatio": 3.0 },  
