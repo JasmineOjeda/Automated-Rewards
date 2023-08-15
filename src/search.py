@@ -3,11 +3,14 @@ from selenium.webdriver.common.by import By
 import time
 import string
 import random
-from functions import send_random_search, clear_search
+from functions import send_random_search, clear_search, sign_in
+
+username = "XXX"
+password = "XXX"
 
 def search(driver, iterations):
+    sign_in(driver, 10, username, password)
     driver.get("https://bing.com/")
-    time.sleep(5)
     count = iterations
 
     while (count > 0) :

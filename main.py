@@ -6,13 +6,13 @@ sys.path.insert(1, 'src')
 import search
 import activities
 
-#options = webdriver.EdgeOptions()
-#driver = webdriver.Edge(options=options)
+options = webdriver.EdgeOptions()
+driver = webdriver.Edge(options=options)
 
-search.desktop_search()
-search.mobile_search()
-#activities.daily_set(driver)
+#search.desktop_search()
+#search.mobile_search()
+activities.daily_set(driver)
 
-#time.sleep(3)#
-#driver.quit()
+time.sleep(3)
+driver.quit()
     
