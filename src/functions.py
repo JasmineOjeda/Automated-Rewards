@@ -27,3 +27,5 @@ def sign_in(driver, timeout, username, password):
         driver.find_element(By.XPATH, "//input[@type='submit']").click()
     except:
         print("Already logged in!")
+
+

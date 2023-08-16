@@ -8,27 +8,42 @@ from functions import send_random_search, clear_search, sign_in
 username = "XXX"
 password = "XXX"
 
-def search(driver, iterations):
+def search(driver, iterations, device):
     sign_in(driver, 10, username, password)
+    bing_window = driver.current_window_handle
     driver.get("https://bing.com/")
-    count = iterations
 
-    while (count > 0) :
+    driver.switch_to.new_window('pointsbreakdown')
+    driver.get("https://rewards.bing.com/pointsbreakdown")
+
+    points_xpath = ""
+
+    if device == "desktop":
+        points_xpath = "//*[@id='userPointsBreakdown']/div/div[2]/div/div[1]/div/div[2]/mee-rewards-user-points-details/div/div/div/div/p[2]/b"
+    elif device == "mobile":
+        points_xpath = "//*[@id='userPointsBreakdown']/div/div[2]/div/div[2]/div/div[2]/mee-rewards-user-points-details/div/div/div/div/p[2]/b"
+
+    count = int(driver.find_element(By.XPATH, points_xpath).text)
+    while ((count/5) - iterations < 0) :
         try:
+            driver.switch_to.window(bing_window)
             random_search = ''.join(random.choices(string.ascii_letters + " ", k=random.randint(3, 15)))
-            print(str(count) + ": " + random_search)
+            print(str(iterations - (count/5)) + ": " + random_search)
+
             send_random_search(driver, 20, random_search, "//textarea[@type='search']")
             time.sleep(0.5)
             clear_search(driver, 20, "//textarea[@type='search']")
             time.sleep(0.5)
-            count -= 1
+
+            driver.switch_to.window('pointsbreakdown')
+            count = int(driver.find_element(By.XPATH, points_xpath).text)
         except:
             time.sleep(5)
 
 def desktop_search():
     options = webdriver.EdgeOptions()
     driver = webdriver.Edge(options=options)
-    search(driver, 30)
+    search(driver, 30, "desktop")
     driver.quit()
 
 def mobile_search():
@@ -42,5 +57,5 @@ def mobile_search():
     options.add_experimental_option("mobileEmulation", mobile_emulation)
 
     driver = webdriver.Edge(options=options)
-    search(driver, 20)
+    search(driver, 20, "mobile")
     driver.quit()
