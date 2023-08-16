@@ -1,5 +1,7 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.wait import WebDriverWait
 import time
 import string
 import random
@@ -22,23 +24,26 @@ def search(driver, iterations, device):
         points_xpath = "//*[@id='userPointsBreakdown']/div/div[2]/div/div[1]/div/div[2]/mee-rewards-user-points-details/div/div/div/div/p[2]/b"
     elif device == "mobile":
         points_xpath = "//*[@id='userPointsBreakdown']/div/div[2]/div/div[2]/div/div[2]/mee-rewards-user-points-details/div/div/div/div/p[2]/b"
-
+    
     count = int(driver.find_element(By.XPATH, points_xpath).text)
-    while ((count/5) - iterations < 0) :
+
+    while ((count/5) - iterations != 0) :
         try:
             driver.switch_to.window(bing_window)
             random_search = ''.join(random.choices(string.ascii_letters + " ", k=random.randint(3, 15)))
-            print(str(iterations - (count/5)) + ": " + random_search)
+            print(str(((count/5) - iterations)) + ": " + random_search)
 
             send_random_search(driver, 20, random_search, "//textarea[@type='search']")
-            time.sleep(0.5)
+            #time.sleep(0.5)
             clear_search(driver, 20, "//textarea[@type='search']")
-            time.sleep(0.5)
+            #time.sleep(0.5)
 
             driver.switch_to.window('pointsbreakdown')
+            driver.refresh()
+            WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, points_xpath)))
             count = int(driver.find_element(By.XPATH, points_xpath).text)
         except:
-            time.sleep(5)
+            time.sleep(2)
 
 def desktop_search():
     options = webdriver.EdgeOptions()
