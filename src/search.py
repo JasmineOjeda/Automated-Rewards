@@ -16,6 +16,7 @@ def search(driver, iterations, device):
     driver.get("https://bing.com/")
 
     driver.switch_to.new_window('pointsbreakdown')
+    points_window = driver.current_window_handle
     driver.get("https://rewards.bing.com/pointsbreakdown")
 
     points_xpath = ""
@@ -34,15 +35,17 @@ def search(driver, iterations, device):
             print(str(((count/5) - iterations)) + ": " + random_search)
 
             send_random_search(driver, 20, random_search, "//textarea[@type='search']")
-            #time.sleep(0.5)
+            time.sleep(0.5)
             clear_search(driver, 20, "//textarea[@type='search']")
-            #time.sleep(0.5)
+            time.sleep(0.5)
 
-            driver.switch_to.window('pointsbreakdown')
+            driver.switch_to.window(points_window)
+            time.sleep(0.5)
             driver.refresh()
             WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, points_xpath)))
             count = int(driver.find_element(By.XPATH, points_xpath).text)
         except:
+            print("Uh oh!")
             time.sleep(2)
 
 def desktop_search():
@@ -56,7 +59,7 @@ def mobile_search():
     #options.use_chromium = True  
     
     mobile_emulation = {  
-        "deviceMetrics": { "width": 375, "height": 812, "pixelRatio": 3.0 },  
+        "deviceMetrics": { "width": 375, "height": 812, "pixelRatio": 3.0 }, 
         "userAgent" : "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.159 Mobile Safari/537.36 Edg/92.0.902.78"  
     }  
     options.add_experimental_option("mobileEmulation", mobile_emulation)

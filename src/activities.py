@@ -34,10 +34,18 @@ def daily_set(driver):
 def ifQuiz(driver):
     try:
         try:
-            driver.find_element(By.XPATH, "//*[@id='rqStartQuiz']")
+            driver.find_element(By.XPATH, "//*[@id='rqStartQuiz']").click()
         except NoSuchElementException:
             print("There is no start button")
 
+        ifNewsQuiz(driver)
+        ifWarpQuiz(driver)
+
+    except NoSuchElementException:
+        print("Not a quiz")
+
+def ifNewsQuiz(driver):
+    try:
         count = 0
         number = driver.find_element(By.XPATH, "//*[@id='QuestionPane" + str(count) + "']/div[2]").text
         total = int(number[6])
@@ -51,8 +59,33 @@ def ifQuiz(driver):
                 count += 1
             except:
                 time.sleep(2)
-    except NoSuchElementException:
-        print("Not a quiz")
+    except:
+        print("Not a news quiz")
+
+def ifWarpQuiz(driver):
+    try:
+        count = int(driver.find_element(By.XPATH, "//*[@id='btoHeadPanel']/span[3]/span[2]/span[1]/span[1]/span").text)
+        total = int(driver.find_element(By.XPATH, "//*[@id='btoHeadPanel']/span[3]/span[2]/span[1]/span[2]").text)
+
+        while count < total:
+            try:
+                print("\t" + str(count) + " out of " + str(total))
+                time.sleep(0.5)
+                cur_points = int(driver.find_element(By.XPATH, "//*[@id='btoHeadPanel']/span[3]/span[2]/span[1]/span[1]/span").text)
+                option = 0
+
+                while cur_points == count:
+                    print("\t\tTrying option " + str(option + 1) + ". . .")
+                    driver.find_element(By.XPATH, "//*[@id='rqAnswerOption" + str(option) + "']").click()
+                    option += 1
+                    cur_points = int(driver.find_element(By.XPATH, "//*[@id='btoHeadPanel']/span[3]/span[2]/span[1]/span[1]/span").text)
+                
+                count = cur_points
+            except:
+                print("Uh oh")
+                time.sleep(2)
+    except:
+        print("Not a warp quiz")
 
 def ifPoll(driver):
     try:
