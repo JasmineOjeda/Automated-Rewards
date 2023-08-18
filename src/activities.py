@@ -24,6 +24,7 @@ def daily_set(driver):
 
     for window in windows:
         if(window != rewards_window):
+            time.sleep(0.5)
             driver.switch_to.window(window)
             ifQuiz(driver)
             ifPoll(driver)
@@ -38,29 +39,33 @@ def ifQuiz(driver):
         except NoSuchElementException:
             print("There is no start button")
 
-        ifNewsQuiz(driver)
+        ifWeeklyQuiz(driver)
         ifWarpQuiz(driver)
 
     except NoSuchElementException:
         print("Not a quiz")
 
-def ifNewsQuiz(driver):
+def ifWeeklyQuiz(driver):
     try:
         count = 0
-        number = driver.find_element(By.XPATH, "//*[@id='QuestionPane" + str(count) + "']/div[2]").text
-        total = int(number[6])
+        total = driver.find_element(By.XPATH, "//*[@id='QuestionPane" + str(count) + "']/div[2]").text
+        total = total.split()[2]
+        total = total.rstrip(total[-1])
+        print(total)
 
-        while count < total:
+        while count < int(total):
             try:
+                time.sleep(0.5)
                 print("\tQuestion " + str(count + 1))
                 driver.find_element(By.XPATH, "//*[@id='QuestionPane" + str(count) + "']/div[1]/div[2]/a[" + str(random.randint(1, 3)) + "]").click()
-                if count < (total - 1):
+                if count < (int(total) - 1):
+                    time.sleep(0.5)
                     driver.find_element(By.XPATH, "//*[@id='nextQuestionbtn" + str(count) + "']").click()
                 count += 1
             except:
                 time.sleep(2)
     except:
-        print("Not a news quiz")
+        print("Not a weekly quiz")
 
 def ifWarpQuiz(driver):
     try:

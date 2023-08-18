@@ -7,8 +7,8 @@ import string
 import random
 from functions import send_random_search, clear_search, sign_in
 
-username = "XXX"
-password = "XXX"
+username = "xxx"
+password = "xxx"
 
 def search(driver, iterations, device):
     sign_in(driver, 10, username, password)
