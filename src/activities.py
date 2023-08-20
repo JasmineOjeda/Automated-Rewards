@@ -4,14 +4,21 @@ from selenium.common.exceptions import NoSuchElementException
 import time
 import random
 
-def daily_set(driver):
+def perform_activites(driver):
+    # Daily Set
+    set(driver, 3, "//*[@id='daily-sets']/mee-card-group[1]/div/mee-card[", "]/div/card-content/mee-rewards-daily-set-item-content")
+    # More Activites
+    set(driver, 15, "//*[@id='more-activities']/div/mee-card[", "]/div/card-content/mee-rewards-more-activities-card-item/div/a")
+
+def set(driver, total, card_first, card_last):
     driver.get("https://rewards.bing.com/")
     rewards_window = driver.current_window_handle
-    count = 3
+    count = total
     card_number = 1
 
     while(count > 0):
-        card = "//*[@id='daily-sets']/mee-card-group[1]/div/mee-card[" + str(card_number) + "]/div/card-content/mee-rewards-daily-set-item-content"
+        print("Card " + str(card_number))
+        card = card_first + str(card_number) + card_last
         try:
             driver.find_element(By.XPATH, card).click()
             count -= 1
