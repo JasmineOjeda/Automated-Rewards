@@ -35,12 +35,12 @@ def search(driver, iterations, device):
             print(str(((count/5) - iterations)) + ": " + random_search)
 
             send_random_search(driver, 20, random_search, "//textarea[@type='search']")
-            time.sleep(0.5)
+            #time.sleep(0.5)
             clear_search(driver, 20, "//textarea[@type='search']")
-            time.sleep(0.5)
+            #time.sleep(0.5)
 
             driver.switch_to.window(points_window)
-            time.sleep(0.5)
+            #time.sleep(0.5)
             driver.refresh()
             WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, points_xpath)))
             count = int(driver.find_element(By.XPATH, points_xpath).text)

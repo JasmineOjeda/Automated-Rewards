@@ -31,7 +31,7 @@ def set(driver, total, card_first, card_last):
 
     for window in windows:
         if(window != rewards_window):
-            time.sleep(0.5)
+            #time.sleep(0.5)
             driver.switch_to.window(window)
             ifQuiz(driver)
             ifPoll(driver)
@@ -42,15 +42,42 @@ def set(driver, total, card_first, card_last):
 def ifQuiz(driver):
     try:
         try:
+            time.sleep(0.5)
             driver.find_element(By.XPATH, "//*[@id='rqStartQuiz']").click()
         except NoSuchElementException:
             print("There is no start button")
 
         ifWeeklyQuiz(driver)
         ifWarpQuiz(driver)
+        ifTurboQuiz(driver)
 
     except NoSuchElementException:
         print("Not a quiz")
+
+def ifTurboQuiz(driver):
+    try:
+        current = int(driver.find_element(By.XPATH, "//*[@id='btoHeadPanel']/span[3]/span[2]/span[2]/span[1]/span").text)
+        total = int(driver.find_element(By.XPATH, "//*[@id='btoHeadPanel']/span[3]/span[2]/span[2]/span[2]").text)
+        count = 0
+
+        while (current * 10) < total:
+            try:
+                print("\tQuestion " + str(count + 1), " " + str(current) + " / " + str(total))
+                driver.find_element(By.XPATH, "//*[@id='rqAnswerOption" + str(random.randint(0, 2)) + "']").click()
+                cur_points = int(driver.find_element(By.XPATH, "//*[@id='btoHeadPanel']/span[3]/span[2]/span[2]/span[1]/span").text)
+                option = 0
+   
+                while cur_points == (count * 10):
+                    print("\t\tTrying option " + str(option + 1) + ". . .")
+                    driver.find_element(By.XPATH, "//*[@id='rqAnswerOption" + str(option) + "']").click()
+                    option += 1
+                    cur_points = int(driver.find_element(By.XPATH, "//*[@id='btoHeadPanel']/span[3]/span[2]/span[2]/span[1]/span").text)
+                count += 1
+            except:
+                time.sleep(2)
+    except:
+        print("Not a turbo quiz")
+
 
 def ifWeeklyQuiz(driver):
     try:
@@ -62,7 +89,7 @@ def ifWeeklyQuiz(driver):
 
         while count < int(total):
             try:
-                time.sleep(0.5)
+                #time.sleep(0.5)
                 print("\tQuestion " + str(count + 1))
                 driver.find_element(By.XPATH, "//*[@id='QuestionPane" + str(count) + "']/div[1]/div[2]/a[" + str(random.randint(1, 3)) + "]").click()
                 if count < (int(total) - 1):
@@ -82,7 +109,7 @@ def ifWarpQuiz(driver):
         while count < total:
             try:
                 print("\t" + str(count) + " out of " + str(total))
-                time.sleep(0.5)
+                #time.sleep(0.5)
                 cur_points = int(driver.find_element(By.XPATH, "//*[@id='btoHeadPanel']/span[3]/span[2]/span[1]/span[1]/span").text)
                 option = 0
 
