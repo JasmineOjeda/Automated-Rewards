@@ -3,6 +3,19 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
 import time
+import random as ran
+
+def get_random_search():
+    events = open("src\dictionary\events.txt").read().split(", ")
+    jobs = open("src\dictionary\jobs.txt").read().split(", ")
+    nouns = open("src\dictionary\\nouns.txt").read().split(", ")
+    proper_nouns = open("src\dictionary\proper_nouns.txt").read().split(", ")
+    questions = open("src\dictionary\questions.txt").read().split(", ")
+    verbs = open("src\dictionary\\verbs.txt").read().split(", ")
+
+    # Test output
+    time.sleep(ran.uniform(0.5, 3.5))
+    return ran.choice(questions) + " " + ran.choice([ran.choice(jobs), ran.choice(nouns), ran.choice(proper_nouns)])
 
 def send_random_search(driver, timeout, string, xpath):
     print("\tSending " + string + " . . .")

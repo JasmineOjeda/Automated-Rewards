@@ -5,7 +5,7 @@ from selenium.webdriver.support.wait import WebDriverWait
 import time
 import string
 import random
-from functions import send_random_search, clear_search, sign_in
+from functions import send_random_search, clear_search, sign_in, get_random_search
 
 username = "xxx"
 password = "xxx"
@@ -31,7 +31,7 @@ def search(driver, iterations, device):
     while ((count/5) - iterations != 0) :
         try:
             driver.switch_to.window(bing_window)
-            random_search = ''.join(random.choices(string.ascii_letters + " ", k=random.randint(3, 15)))
+            random_search = get_random_search()
             print(str(((count/5) - iterations)) + ": " + random_search)
 
             send_random_search(driver, 20, random_search, "//textarea[@type='search']")
