@@ -2,6 +2,7 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
+from selenium.webdriver.common.action_chains import ActionChains
 import time
 import string
 import random
@@ -11,7 +12,7 @@ username = "xxx"
 password = "xxx"
 
 def search(driver, iterations, device):
-    sign_in(driver, 10, username, password)
+    action = ActionChains(driver)
     bing_window = driver.current_window_handle
     driver.get("https://bing.com/")
 
@@ -26,11 +27,15 @@ def search(driver, iterations, device):
     elif device == "mobile":
         points_xpath = "//*[@id='userPointsBreakdown']/div/div[2]/div/div[2]/div/div[2]/mee-rewards-user-points-details/div/div/div/div/p[2]/b"
     
-    count = int(driver.find_element(By.XPATH, points_xpath).text)
-
+    count = 0#int(driver.find_element(By.XPATH, points_xpath).text)
+    
+    random_search = get_random_search()
     while ((count/5) - iterations != 0) :
         try:
             driver.switch_to.window(bing_window)
+
+            action.move_to_element(driver.find_element(By.XPATH, "//textarea[@type='search']")).perform() #.click(hidden_submenu).perform()
+
             random_search = get_random_search()
             print(str(((count/5) - iterations)) + ": " + random_search)
 

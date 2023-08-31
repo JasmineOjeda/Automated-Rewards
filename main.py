@@ -17,29 +17,31 @@ edge_options.add_argument("start-maximized")
 edge_options.add_argument("--ignore-certificate-errors")
 edge_options.add_argument("--disable-blink-features=AutomationControlled")
 edge_options.add_experimental_option("excludeSwitches", ["enable-automation"])
-edge_options.add_argument("user-data-dir=path to user data")
-edge_options.add_argument("profile-directory=Profile 1")
-edge_options.binary_location = r"path to msedge.exe"
-#–disable-notifications
+edge_options.add_argument("user-data-dir=path to User Data")
+edge_options.add_argument("profile-directory=path to profile")
+edge_options.binary_location = r"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe"
 
 serv = Service("msedgedriver.exe")
 driver = webdriver.Edge(service=serv, options=edge_options)
-print("Opened window")
+time.sleep(2)
+#print("Opened window")
 
-driver.get("https://www.idealista.com/")
-
+# TEST FOR BOT DETECTION
+#driver.get("https://www.idealista.com/")
 #cookies = pickle.load(open("cookies.pkl", "rb"))
 #for cookie in cookies:
 #    driver.add_cookie(cookie)
-
 #driver.get("https://www.idealista.com/")
+
 
 #print(functions.get_random_search())
 
+functions.sign_in(driver, 10, "xxx", "xxx")
+#search.search(driver, 5, "desktop")
 #search.desktop_search()
 #search.mobile_search()
 #activities.perform_activites(driver)
 
-time.sleep(5)
+time.sleep(1000)
 driver.quit()
     
