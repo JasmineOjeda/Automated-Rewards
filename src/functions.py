@@ -5,9 +5,15 @@ from selenium.webdriver.support.wait import WebDriverWait
 import time
 import random as ran
 
+# * * * * * STRING FUNCTIONS * * * * *
 def alter_search(search_text):
     length = len(search_text)
-    changed_search = search_text
+    changed_search = search_text.replace(" ", "", ran.randint(0, 1))
+
+    if (length > 1):
+        index = ran.randint(0, length - 1)
+        changed_search = changed_search[:index] + "" + changed_search[index + 1:]
+
     return changed_search
 
 def get_random_search():
@@ -34,9 +40,11 @@ def get_random_search():
         tmp2 = job + " " + verb + " " + event
         search_text = ran.choice([tmp1, tmp2])
     
+    # Random wait
     time.sleep(ran.uniform(0.5, 3.5))
     return search_text
 
+# * * * * * DRIVER FUNCTIONS * * * * *
 def send_random_search(driver, timeout, string, xpath):
     print("\tSending " + string + " . . .")
     WebDriverWait(driver, timeout).until(EC.presence_of_element_located((By.XPATH, xpath)))
@@ -51,7 +59,6 @@ def clear_search(driver, timeout, xpath):
 
 def sign_in(driver, timeout, username, password):
     driver.get("https://login.live.com/")
-    #time.sleep(500)
     try:
         WebDriverWait(driver, timeout).until(EC.presence_of_element_located((By.XPATH, "//input[@type='email']")))
         driver.find_element(By.XPATH, "//input[@type='email']").send_keys(username)
@@ -68,3 +75,4 @@ def sign_in(driver, timeout, username, password):
         driver.find_element(By.XPATH, "//*[@id='idSIButton9']").click()
     except:
         print("Already logged in!")
+

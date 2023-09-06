@@ -4,12 +4,16 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.common.action_chains import ActionChains
 import time
-import string
 import random
-from functions import send_random_search, clear_search, sign_in, get_random_search
+from functions import send_random_search, clear_search, get_random_search, alter_search
 
-username = "xxx"
-password = "xxx"
+def desktop_search(driver):
+    driver.maximize_window()
+    search(driver, 30, "desktop")
+
+def mobile_search(driver):
+    driver.set_window_size(300, 600)
+    search(driver, 20, "mobile")
 
 def search(driver, iterations, device):
     action = ActionChains(driver)
@@ -27,23 +31,26 @@ def search(driver, iterations, device):
     elif device == "mobile":
         points_xpath = "//*[@id='userPointsBreakdown']/div/div[2]/div/div[2]/div/div[2]/mee-rewards-user-points-details/div/div/div/div/p[2]/b"
     
-    count = 0#int(driver.find_element(By.XPATH, points_xpath).text)
+    count = int(driver.find_element(By.XPATH, points_xpath).text)
     
     random_search = get_random_search()
     while ((count/5) - iterations != 0) :
         try:
             driver.switch_to.window(bing_window)
-
             action.move_to_element(driver.find_element(By.XPATH, "//textarea[@type='search']")).perform() #.click(hidden_submenu).perform()
-
-            random_search = get_random_search()
             print(str(((count/5) - iterations)) + ": " + random_search)
 
+            time.sleep(random.uniform(0.5, 1))
             send_random_search(driver, 20, random_search, "//textarea[@type='search']")
-            #time.sleep(0.5)
+            time.sleep(0.5)
             clear_search(driver, 20, "//textarea[@type='search']")
-            #time.sleep(0.5)
+            time.sleep(0.5)
 
+            if (len(random_search) > 1):
+                random_search = alter_search(random_search)
+            else:
+                random_search = get_random_search()
+            
             driver.switch_to.window(points_window)
             #time.sleep(0.5)
             driver.refresh()
@@ -52,23 +59,3 @@ def search(driver, iterations, device):
         except:
             print("Uh oh!")
             time.sleep(2)
-
-def desktop_search():
-    options = webdriver.EdgeOptions()
-    driver = webdriver.Edge(options=options)
-    search(driver, 30, "desktop")
-    driver.quit()
-
-def mobile_search():
-    options = webdriver.EdgeOptions()
-    #options.use_chromium = True  
-    
-    mobile_emulation = {  
-        "deviceMetrics": { "width": 375, "height": 812, "pixelRatio": 3.0 }, 
-        "userAgent" : "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.159 Mobile Safari/537.36 Edg/92.0.902.78"  
-    }  
-    options.add_experimental_option("mobileEmulation", mobile_emulation)
-
-    driver = webdriver.Edge(options=options)
-    search(driver, 20, "mobile")
-    driver.quit()
