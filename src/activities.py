@@ -4,39 +4,51 @@ from selenium.common.exceptions import NoSuchElementException
 import time
 import random
 
+#plus icon (first card): for needs to be done
+# //*[@id="more-activities"]/div/mee-card[1]/div/card-content/mee-rewards-more-activities-card-item/div/a/mee-rewards-points/div/div/span[1]
+# <span class="mee-icon mee-icon-AddMedium" ng-if="$ctrl.iconName" aria-label="plus" role="note"></span>
+
+# checkmark icon (thrid card): for completed
+# //*[@id="more-activities"]/div/mee-card[3]/div/card-content/mee-rewards-more-activities-card-item/div/a/mee-rewards-points/div/div/span[1]
+# <span class="mee-icon mee-icon-SkypeCircleCheck" ng-if="$ctrl.iconName" aria-label="plus" role="note"></span>
+
 def perform_activites(driver):
     # Daily Set
-    set(driver, 3, "//*[@id='daily-sets']/mee-card-group[1]/div/mee-card[", "]/div/card-content/mee-rewards-daily-set-item-content")
+    #set(driver, 3, "//*[@id='daily-sets']/mee-card-group[1]/div/mee-card[", "]/div/card-content/mee-rewards-daily-set-item-content")
     # More Activites
     set(driver, 15, "//*[@id='more-activities']/div/mee-card[", "]/div/card-content/mee-rewards-more-activities-card-item/div/a")
 
 def set(driver, total, card_first, card_last):
     driver.get("https://rewards.bing.com/")
     rewards_window = driver.current_window_handle
-    count = total
     card_number = 1
+    card_set = []
 
-    while(count > 0):
+    while(total >= card_number):
         print("Card " + str(card_number))
-        card = card_first + str(card_number) + card_last
+        card_xpath = card_first + str(card_number) + card_last
+        
         try:
-            driver.find_element(By.XPATH, card).click()
-            count -= 1
+            try:
+                driver.find_element(By.XPATH, card_xpath).find_element(By.XPATH, "//span[@class='mee-icon mee-icon-AddMedium']")
+                card_set.append(driver.find_element(By.XPATH, card_xpath))
+            except:
+                print("\tN/A for points")
             card_number += 1
         except:
             time.sleep(2)
-    
+            print("Oops")
 
-    windows = driver.window_handles
-
-    for window in windows:
-        if(window != rewards_window):
-            #time.sleep(0.5)
-            driver.switch_to.window(window)
-            ifQuiz(driver)
-            ifPoll(driver)
-            print("\n")
-            driver.close()
+    for card in card_set:
+        card.click()
+        driver.switch_to.window(driver.window_handles[-1])
+        time.sleep(random.uniform(1.0, 3.5))
+        ifQuiz(driver)
+        ifPoll(driver)
+        print("\n")
+        driver.close()
+        driver.switch_to.window(rewards_window)
+        time.sleep(0.5)
 
     driver.switch_to.window(rewards_window)
 
