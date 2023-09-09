@@ -52,7 +52,6 @@ def search(driver, iterations, device):
                 random_search = get_random_search()
             
             driver.switch_to.window(points_window)
-            #time.sleep(0.5)
             driver.refresh()
             WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, points_xpath)))
             count = int(driver.find_element(By.XPATH, points_xpath).text)

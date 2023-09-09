@@ -1,2 +1,5 @@
 **/__pycache__/
 cookies.pkl
+info.json
+log.txt
+test.py

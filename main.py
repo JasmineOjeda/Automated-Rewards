@@ -1,9 +1,9 @@
-import selenium
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.edge.service import Service
 import pickle
 import time
+import json
 import sys
 
 sys.path.insert(1, 'src')
@@ -11,8 +11,8 @@ import search
 import activities
 import functions
 
-username = "xxx"
-password = "xxx"
+file = open('info.json')
+data = json.load(file)
 
 # DRIVER OPTIONS SETUP
 edge_options = webdriver.EdgeOptions()
@@ -21,8 +21,8 @@ edge_options.add_argument("start-maximized")
 edge_options.add_argument("--ignore-certificate-errors")
 edge_options.add_argument("--disable-blink-features=AutomationControlled")
 edge_options.add_experimental_option("excludeSwitches", ["enable-automation"])
-edge_options.add_argument("--user-data-dir=C:\\xxx\\Temp User Data")
-edge_options.binary_location = r"C:\xxx\msedge.exe"
+edge_options.add_argument("--user-data-dir=" + data["userDataDir"])
+edge_options.binary_location = data["binaryLocation"]
 mobile_emulation = {  
         "deviceMetrics": { "width": 375, "height": 812, "pixelRatio": 3.0 }, 
         "userAgent" : "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.159 Mobile Safari/537.36 Edg/92.0.902.78"  
@@ -35,7 +35,7 @@ driver = webdriver.Edge(service=serv, options=edge_options)
 time.sleep(3)
 
 # SIGN INTO ACCOUNT IF NEEDED
-functions.sign_in(driver, 10, username, password)
+functions.sign_in(driver, 10, data["username"], data["password"])
 
 # PERFORM MOBILE SEARCH
 search.mobile_search(driver)
