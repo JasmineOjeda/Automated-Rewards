@@ -1,28 +1,28 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
-from selenium.common.exceptions import NoSuchElementException
+from selenium.common.exceptions import NoSuchElementException, ElementNotInteractableException
 import time
 import random
 
 def perform_activites(driver):
     # Daily Set
-    set(driver, "//*[@id='daily-sets']/mee-card-group[1]/div", "//mee-rewards-daily-set-item-content")
+    set(driver, "//*[@id='daily-sets']/mee-card-group[1]/div", ".//mee-rewards-daily-set-item-content")
     # More Activites
-    set(driver, "//*[@id='more-activities']/div", "//mee-rewards-more-activities-card-item")
+    set(driver, "//*[@id='more-activities']/div", ".//mee-rewards-more-activities-card-item")
 
 def set(driver, container_xpath, card_xpath):
     driver.get("https://rewards.bing.com/")
     rewards_window = driver.current_window_handle
-    count = 1
     card_set = driver.find_element(By.XPATH, container_xpath).find_elements(By.XPATH, card_xpath)
 
-    cards_to_remove = []
-    print("Before: " + str(len(card_set)))
 
     while(len(card_set) > 0):
+        cards_to_remove = []
+        print("Before: " + str(len(card_set)))
+
         for card in card_set:
             try:
-                card.find_element(By.XPATH, card_xpath).find_element(By.XPATH, "//span[@class='mee-icon mee-icon-AddMedium']")
+                card.find_element(By.XPATH, ".//*[@class='mee-icon mee-icon-AddMedium']")
             except NoSuchElementException:
                 print("Removing N/A card...")
                 cards_to_remove.append(card)
@@ -31,18 +31,23 @@ def set(driver, container_xpath, card_xpath):
             card_set.remove(card)
 
         print("After: " + str(len(card_set)))
+        cards_to_remove = []
+        count = 1
 
         for card in card_set:
             print("Card " + str(count))
-            card.click()
-            driver.switch_to.window(driver.window_handles[-1])
-            time.sleep(random.uniform(1.0, 3.5))
-            ifQuiz(driver)
-            ifPoll(driver)
-            print("\n")
-            driver.close()
-            driver.switch_to.window(rewards_window)
-            time.sleep(0.5)
+            try:
+                card.click()
+                driver.switch_to.window(driver.window_handles[-1])
+                time.sleep(random.uniform(1.0, 3.5))
+                ifQuiz(driver)
+                ifPoll(driver)
+                print("\n")
+                driver.close()
+                driver.switch_to.window(rewards_window)
+                time.sleep(0.5)
+            except ElementNotInteractableException:
+                print("\tNot clickable card")
             count += 1
 
     driver.switch_to.window(rewards_window)
