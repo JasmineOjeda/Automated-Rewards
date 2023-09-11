@@ -49,7 +49,6 @@ def set(driver, container_xpath, card_xpath):
             except ElementNotInteractableException:
                 print("\tNot clickable card")
             count += 1
-
     driver.switch_to.window(rewards_window)
 
 def ifQuiz(driver):
@@ -78,21 +77,21 @@ def ifTurboQuiz(driver):
         total = int(driver.find_element(By.XPATH, "//*[@id='btoHeadPanel']/span[3]/span[2]/span[2]/span[2]").text)
         count = 0
 
-        while (current * 10) < total:
+        while current < total:
             try:
-                print("\tQuestion " + str(count + 1), " " + str(current * 10) + " / " + str(total))
+                print("\tQuestion " + str(count + 1), " " + str(current) + " / " + str(total))
                 driver.find_element(By.XPATH, "//*[@id='rqAnswerOption" + str(random.randint(0, 2)) + "']").click()
                 cur_points = int(driver.find_element(By.XPATH, "//*[@id='btoHeadPanel']/span[3]/span[2]/span[2]/span[1]/span").text)
                 option = 0
    
-                while cur_points == (count * 10):
+                while cur_points == current:
                     print("\t\tTrying option " + str(option + 1) + ". . .")
                     time.sleep(random.uniform(0.5, 1.5))
                     driver.find_element(By.XPATH, "//*[@id='rqAnswerOption" + str(option) + "']").click()
                     option += 1
                     cur_points = int(driver.find_element(By.XPATH, "//*[@id='btoHeadPanel']/span[3]/span[2]/span[2]/span[1]/span").text)
                 
-                count = cur_points / 10
+                current = cur_points
             except:
                 print("Pending...")
                 time.sleep(2)

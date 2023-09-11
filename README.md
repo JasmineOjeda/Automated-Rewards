@@ -9,6 +9,8 @@ Written in Python 3.10.4 with Selenium.
 
 To install Selenium: ```pip install selenium```
 
+To install Beautiful Soup: ```pip install bs4```
+
 To run the program: ```python main.py```
 
 

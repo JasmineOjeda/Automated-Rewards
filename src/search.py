@@ -57,3 +57,7 @@ def search(driver, iterations, device):
         except:
             print("Uh oh!")
             time.sleep(2)
+
+    driver.switch_to.window(bing_window)
+    driver.close()
+    driver.switch_to.window(points_window)
